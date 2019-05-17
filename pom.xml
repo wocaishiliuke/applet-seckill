@@ -21,7 +21,9 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        <!-- slf4j门面+logback实现 -->
+        <!-- 日志接口:slf4j,log4j,logback,common-logging
+             日志实现:log4j,logback,common-logging -->
+        <!-- 这里使用slf4j门面+logback实现 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -41,7 +43,7 @@
         </dependency>
         <!-- 数据源 -->
         <dependency>
-            <groupId>c3p0</groupId>
+            <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
         </dependency>
         <!-- mybatis -->

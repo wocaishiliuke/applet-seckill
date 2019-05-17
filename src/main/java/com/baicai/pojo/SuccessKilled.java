@@ -4,20 +4,22 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *
+ * @Description 秒杀记录表
+ * @Author yuzhou
+ * @Date 19-5-17
  */
 public class SuccessKilled implements Serializable {
 
     private static final long serialVersionUID = -6921147668978649157L;
-
+    /* 秒杀记录主键 */
     private long seckillId;
-    /* 用户的手机号码*/
+    /* 用户手机号 */
     private long userPhone;
-    /* 秒杀的状态*/
+    /* 秒杀状态：-1无效 0成功 1已付款 */
     private short state;
     /* 创建时间*/
     private LocalDateTime createTime;
-    /* 多对一,因为一件商品在库存中肯定有许多,对应的购买信息也有很多*/
+    /* 秒杀的商品 */
     private Seckill seckill;
 
     public SuccessKilled() {}
@@ -73,11 +75,11 @@ public class SuccessKilled implements Serializable {
     @Override
     public String toString() {
         return "SuccessKilled{" +
-                "主键ID=" + seckillId +
-                ", 手机号码=" + userPhone +
-                ", 秒杀状态=" + state +
-                ", 创建时间=" + createTime +
-                ", 秒杀的商品=" + seckill +
+                "seckillId=" + seckillId +
+                ", userPhone=" + userPhone +
+                ", state=" + state +
+                ", createTime=" + createTime +
+                ", seckill=" + seckill +
                 '}';
     }
 }

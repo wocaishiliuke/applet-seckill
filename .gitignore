@@ -10,11 +10,7 @@ gen
 # Maven
 log/
 logs/
-target/classes
-target/generated-test-sources
-target/maven-archiver
-target/generated-sources
-target/maven-status
+target/
 
 # Eclipse
 build/

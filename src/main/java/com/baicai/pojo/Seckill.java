@@ -3,20 +3,25 @@ package com.baicai.pojo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @Description 秒杀商品（库存）表
+ * @Author yuzhou
+ * @Date 19-5-17
+ */
 public class Seckill implements Serializable {
 
     private static final long serialVersionUID = 2912164127598660137L;
-    /* 主键ID*/
+    /* 秒杀商品主键*/
     private long seckillId;
-    /*  秒杀商品名字 */
+    /* 秒杀商品名 */
     private String name;
-    /* 秒杀的商品编号 */
+    /* 秒杀商品编号 */
     private int number;
-    /* 开始秒杀的时间 */
+    /* 秒杀开始时间 */
     private LocalDateTime startTime;
-    /* 结束秒杀的时间 */
+    /* 秒杀结束时间 */
     private LocalDateTime endTime;
-    /* 创建的时间 */
+    /* 创建时间 */
     private LocalDateTime createTIme;
 
     public Seckill() {
@@ -81,13 +86,13 @@ public class Seckill implements Serializable {
 
     @Override
     public String toString() {
-        return "com.suny.entity.Seckill{" +
-                "主键ID=" + seckillId +
-                ", 秒杀商品='" + name + '\'' +
-                ", 编号=" + number +
-                ", 开始秒杀时间=" + startTime +
-                ", 结束秒杀时间=" + endTime +
-                ", 创建时间=" + createTIme +
+        return "Seckill{" +
+                "seckillId=" + seckillId +
+                ", name='" + name + '\'' +
+                ", number=" + number +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", createTIme=" + createTIme +
                 '}';
     }
 }
