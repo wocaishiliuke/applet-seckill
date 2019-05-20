@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baicai.mapper.SkRecordMapper">
+
+    <!-- 根据联合主键Id&&userPhone，查询秒杀记录（这里也可以使用resultMap） -->
+    <select id="queryBySkproductIdAndUserPhone" resultType="SkRecord">
+        SELECT skr.skproduct_id, skr.user_phone, skr.create_time, skr.state,
+            skp.id  "skProduct.id",
+            skp.name "skProduct.name",
+            skp.number "skProduct.number",
+            skp.start_time  "skProduct.start_time",
+            skp.end_time  "skProduct.end_time",
+            skp.create_time "skProduct.create_time"
+        FROM sk_record skr
+        INNER JOIN sk_product skp ON skr.skproduct_id = skp.id
+        WHERE skr.skproduct_id = #{skproductId} AND skr.user_phone= #{userPhone}
+    </select>
+
+    <!-- 插入秒杀记录（IGNORE：唯一字段值已存在时，忽略错误，影响条数返回0，但主键仍会自增） -->
+    <insert id="insert">
+        INSERT IGNORE INTO sk_record (skproduct_id, user_phone, state)
+        VALUES (#{skproductId}, #{userPhone}, 0)
+    </insert>
+</mapper>

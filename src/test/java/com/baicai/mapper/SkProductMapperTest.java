@@ -1,6 +1,6 @@
 package com.baicai.mapper;
 
-import com.baicai.pojo.Seckill;
+import com.baicai.pojo.SkProduct;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,35 +10,33 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-dao.xml"})
-public class SeckillMapperTest {
+public class SkProductMapperTest {
 
     @Autowired
-    private SeckillMapper seckillMapper;
+    private SkProductMapper skProductMapper;
 
     @Test
     public void queryById() {
-        long seckillId = 1000;
-        Seckill seckill = seckillMapper.queryById(seckillId);
-        System.out.println(seckill.toString());
+        long id = 1000;
+        SkProduct skProduct = skProductMapper.queryById(id);
+        System.out.println(skProduct.toString());
     }
 
     @Test
     public void queryPageList() {
-        List<Seckill> seckills = seckillMapper.queryPageList(0, 100);
-        for (Seckill seckill : seckills) {
-            System.out.println(seckill.toString());
+        List<SkProduct> skProducts = skProductMapper.queryPageList(0, 100);
+        for (SkProduct skProduct : skProducts) {
+            System.out.println(skProduct.toString());
         }
     }
 
     @Test
     public void reduceNumber() {
-        long seckillId=1000;
+        long id=1000;
         LocalDateTime localDateTime=LocalDateTime.now();
-        int i = seckillMapper.reduceNumber(seckillId, localDateTime);
+        int i = skProductMapper.reduceNumber(id, localDateTime);
         System.out.println(i);
     }
 }

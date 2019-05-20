@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
  * @Author yuzhou
  * @Date 19-5-17
  */
-public class Seckill implements Serializable {
+public class SkProduct implements Serializable {
 
     private static final long serialVersionUID = 2912164127598660137L;
     /* 秒杀商品主键*/
-    private long seckillId;
+    private long id;
     /* 秒杀商品名 */
     private String name;
     /* 秒杀商品编号 */
@@ -24,11 +24,11 @@ public class Seckill implements Serializable {
     /* 创建时间 */
     private LocalDateTime createTIme;
 
-    public Seckill() {
+    public SkProduct() {
     }
 
-    public Seckill(long seckillId, String name, int number, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime createTIme) {
-        this.seckillId = seckillId;
+    public SkProduct(long id, String name, int number, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime createTIme) {
+        this.id = id;
         this.name = name;
         this.number = number;
         this.startTime = startTime;
@@ -36,12 +36,12 @@ public class Seckill implements Serializable {
         this.createTIme = createTIme;
     }
 
-    public long getSeckillId() {
-        return seckillId;
+    public long getId() {
+        return id;
     }
 
-    public void setSeckillId(long seckillId) {
-        this.seckillId = seckillId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -86,8 +86,8 @@ public class Seckill implements Serializable {
 
     @Override
     public String toString() {
-        return "Seckill{" +
-                "seckillId=" + seckillId +
+        return "SkProduct{" +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", number=" + number +
                 ", startTime=" + startTime +

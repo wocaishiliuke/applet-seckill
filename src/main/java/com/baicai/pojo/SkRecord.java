@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
  * @Author yuzhou
  * @Date 19-5-17
  */
-public class SuccessKilled implements Serializable {
+public class SkRecord implements Serializable {
 
     private static final long serialVersionUID = -6921147668978649157L;
-    /* 秒杀记录主键 */
-    private long seckillId;
+    /* 秒杀商品主键 */
+    private long skproductId;
     /* 用户手机号 */
     private long userPhone;
     /* 秒杀状态：-1无效 0成功 1已付款 */
@@ -20,24 +20,24 @@ public class SuccessKilled implements Serializable {
     /* 创建时间*/
     private LocalDateTime createTime;
     /* 秒杀的商品 */
-    private Seckill seckill;
+    private SkProduct skProduct;
 
-    public SuccessKilled() {}
+    public SkRecord() {}
 
-    public SuccessKilled(long seckillId, long userPhone, short state, LocalDateTime createTime, Seckill seckill) {
-        this.seckillId = seckillId;
+    public SkRecord(long skproductId, long userPhone, short state, LocalDateTime createTime, SkProduct skProduct) {
+        this.skproductId = skproductId;
         this.userPhone = userPhone;
         this.state = state;
         this.createTime = createTime;
-        this.seckill = seckill;
+        this.skProduct = skProduct;
     }
 
-    public long getSeckillId() {
-        return seckillId;
+    public long getSkproductId() {
+        return skproductId;
     }
 
-    public void setSeckillId(long seckillId) {
-        this.seckillId = seckillId;
+    public void setSkproductId(long skproductId) {
+        this.skproductId = skproductId;
     }
 
     public long getUserPhone() {
@@ -64,22 +64,22 @@ public class SuccessKilled implements Serializable {
         this.createTime = createTime;
     }
 
-    public Seckill getSeckill() {
-        return seckill;
+    public SkProduct getSkProduct() {
+        return skProduct;
     }
 
-    public void setSeckill(Seckill seckill) {
-        this.seckill = seckill;
+    public void setSkProduct(SkProduct skProduct) {
+        this.skProduct = skProduct;
     }
 
     @Override
     public String toString() {
-        return "SuccessKilled{" +
-                "seckillId=" + seckillId +
+        return "SkRecord{" +
+                "skproductId=" + skproductId +
                 ", userPhone=" + userPhone +
                 ", state=" + state +
                 ", createTime=" + createTime +
-                ", seckill=" + seckill +
+                ", skProduct=" + skProduct +
                 '}';
     }
 }
