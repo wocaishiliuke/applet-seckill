@@ -1,5 +1,6 @@
 package com.baicai.service.impl;
 
+import com.baicai.dao.RedisDao;
 import com.baicai.enums.SeckillStatusEnum;
 import com.baicai.exception.SeckillClosedException;
 import com.baicai.exception.SeckillException;
@@ -37,6 +38,8 @@ public class SkProductServiceImpl implements SkProductService {
     private SkProductMapper skProductMapper;
     @Autowired
     private SkRecordMapper skRecordMapper;
+    @Autowired
+    private RedisDao redisDao;
 
     /**
      * 根据ID，查询秒杀商品
@@ -46,7 +49,14 @@ public class SkProductServiceImpl implements SkProductService {
      */
     @Override
     public SkProduct getById(long id) {
-        return skProductMapper.queryById(id);
+        SkProduct skProduct = redisDao.getSkProduct(id);
+        if (skProduct == null) {
+            skProduct = skProductMapper.queryById(id);
+            if (skProduct != null)
+                // 放入redis
+                redisDao.putSkProduct(skProduct);
+        }
+        return skProduct;
     }
 
     /**
@@ -70,22 +80,23 @@ public class SkProductServiceImpl implements SkProductService {
     @Override
     public ExposeResult expose(long id) {
         // 判断是否存在该秒杀商品
-        SkProduct skProduct = skProductMapper.queryById(id);
+        /*SkProduct skProduct = skProductMapper.queryById(id);
         if (skProduct == null) {
             logger.warn("查询不到该商品");
             return new ExposeResult(false, id);
-        }
-        /*SkProduct skProduct = redisDao.getSkProduct(id);
+        }*/
+        SkProduct skProduct = redisDao.getSkProduct(id);
         if (skProduct == null) {
             // 访问数据库读取数据
             skProduct = skProductMapper.queryById(id);
             if (skProduct == null) {
+                logger.warn("查询不到该商品");
                 return new ExposeResult(false, id);
             } else {
                 // 放入redis
-                redisDao.putSeckill(skProduct);
+                redisDao.putSkProduct(skProduct);
             }
-        }*/
+        }
 
         // 判断是否在秒杀期间
         LocalDateTime startTime = skProduct.getStartTime();

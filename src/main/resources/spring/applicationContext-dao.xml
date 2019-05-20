@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties, classpath:redis.properties"/>
 
     <!--配置数据库连接池-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -40,6 +40,13 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 给出要扫描的mapper接口 -->
         <property name="basePackage" value="com.baicai.mapper"/>
+    </bean>
+
+    <!-- 单独配置RedisDao -->
+    <bean id="redisDao" class="com.baicai.dao.RedisDao">
+        <!--构造方法注入值-->
+        <constructor-arg index="0" value="${redis.addr}"/>
+        <constructor-arg index="1" value="${redis.port}"/>
     </bean>
 
 </beans>
