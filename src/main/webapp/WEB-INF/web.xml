@@ -27,7 +27,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
-        <!-- /*优先级更高，拦截所有请求，包括jsp -->
-        <url-pattern>/*</url-pattern>
+        <!-- 使用/，jsp请求会被默认的servlet处理 -->
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>

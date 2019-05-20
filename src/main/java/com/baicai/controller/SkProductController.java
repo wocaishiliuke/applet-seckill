@@ -82,20 +82,20 @@ public class SkProductController {
      * 秒杀
      * @param id
      * @param md5
-     * @param phone
+     * @param userPhone 前端保存在Cookie
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "seckill/{id}/{md5}", method = RequestMethod.POST)
     public CommonResult<SeckillResult> seckill(@PathVariable("id") Long id, @PathVariable("md5") String md5,
-                                               @CookieValue(value = "phone", required = false) Long phone) {
-        if(phone == null) {
+                                               @CookieValue(value = "userPhone", required = false) Long userPhone) {
+        if(userPhone == null) {
             return new CommonResult<>(false, "没有手机号");
         }
         // 根据用户的手机号码,秒杀商品的id跟md5进行秒杀商品,没异常就是秒杀成功
         try {
             // 这里换成储存过程
-            SeckillResult seckillResult = skProductService.seckill(id, phone, md5);
+            SeckillResult seckillResult = skProductService.seckill(id, userPhone, md5);
             return new CommonResult<>(true, seckillResult);
         } catch (SeckillRepeatedException e1) {
             // 重复秒杀
@@ -113,9 +113,9 @@ public class SkProductController {
      * 获取服务器端时间，防止用户篡改客户端时间提前参与秒杀
      * @return
      */
-    @RequestMapping(value = "time/now", method = RequestMethod.GET)
+    @RequestMapping(value = "now", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<LocalDateTime> time() {
+    public CommonResult<LocalDateTime> now() {
         return new CommonResult<>(true, LocalDateTime.now());
     }
 }
