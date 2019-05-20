@@ -8,6 +8,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <!-- 不能重复读springMVC的配置，否则会重复初始化扫描的controller，出现覆盖和不可预知的问题 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring/applicationContext-*.xml</param-value>
@@ -26,6 +27,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
-        <url-pattern>/</url-pattern>
+        <!-- /*优先级更高，拦截所有请求，包括jsp -->
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>
