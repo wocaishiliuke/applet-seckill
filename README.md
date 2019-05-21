@@ -1387,6 +1387,8 @@ public CommonResult<SeckillResult> seckill(@PathVariable("id") Long id, @PathVar
 ---
 ## 四、页面测试
 
+测试前，保证MySQL和Redis服务可用。
+
 - 1.在IDEA中启动项目，或在终端执行：
 
 ```shell
