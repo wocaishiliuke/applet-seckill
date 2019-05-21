@@ -1,6 +1,5 @@
 package com.baicai.service;
 
-import com.baicai.exception.SeckillException;
 import com.baicai.pojo.SkProduct;
 import com.baicai.pojo.dto.ExposeResult;
 import com.baicai.pojo.dto.SeckillResult;

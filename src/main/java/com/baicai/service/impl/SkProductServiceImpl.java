@@ -138,7 +138,7 @@ public class SkProductServiceImpl implements SkProductService {
         LocalDateTime nowTime = LocalDateTime.now();
         try {
             // 减库存
-            int affectNumber = skProductMapper.reduceNumber(id, nowTime);
+            Integer affectNumber = skProductMapper.reduceNumber(id, nowTime);
             if (affectNumber <= 0) {
                 logger.warn("减库存失败, 说明秒杀结束");
                 throw new SeckillClosedException("seckill is closed...");

@@ -19,7 +19,7 @@ public class SkProductMapperTest {
 
     @Test
     public void queryById() {
-        long id = 1000;
+        Long id = 1000L;
         SkProduct skProduct = skProductMapper.queryById(id);
         System.out.println(skProduct.toString());
     }
@@ -34,7 +34,7 @@ public class SkProductMapperTest {
 
     @Test
     public void reduceNumber() {
-        long id=1000;
+        Long id = 1000L;
         LocalDateTime localDateTime=LocalDateTime.now();
         int i = skProductMapper.reduceNumber(id, localDateTime);
         System.out.println(i);

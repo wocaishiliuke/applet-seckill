@@ -29,5 +29,5 @@ public interface SkRecordMapper {
      * @param createTime 秒杀时间=减库存时间
      * @return 成功插入返回1，否则返回0
      */
-    Integer insert(@Param("skproductId") Long skproductId, @Param("userPhone") Long userPhone, @Param("userPhone") LocalDateTime createTime);
+    Integer insert(@Param("skproductId") Long skproductId, @Param("userPhone") Long userPhone, @Param("createTime") LocalDateTime createTime);
 }

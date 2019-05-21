@@ -45,14 +45,13 @@ public class SkProductServiceImplTest {
      * @return void
      */
     @Test
-    public void seckill() throws Exception {
+    public void seckill() {
         Long id = 1000L;
         ExposeResult exposeResult = skProductService.expose(id);
         if (exposeResult.isExposed()) {
             long userPhone = 12222222222L;
-            String md5 = "c5a57809123be9581aefb4991f09998c";
             try {
-                SeckillResult seckillResult = skProductService.seckill(id, userPhone, md5);
+                SeckillResult seckillResult = skProductService.seckill(id, userPhone, exposeResult.getMd5());
                 System.out.println(seckillResult.toString());
             } catch (SeckillClosedException | SeckillRepeatedException e) {
                 e.printStackTrace();
@@ -68,12 +67,11 @@ public class SkProductServiceImplTest {
      */
     @Test
     public void executeSeckillProcedureTest() {
-        long id = 1001;
-        long phone = 13688888888L;
+        Long id = 1001L;
+        Long phone = 13688888888L;
         ExposeResult exposeResult = skProductService.expose(id);
         if (exposeResult.isExposed()) {
-            String md5 = exposeResult.getMd5();
-            SeckillResult seckillResult = skProductService.seckillByProcedure(id, phone, md5);
+            SeckillResult seckillResult = skProductService.seckillByProcedure(id, phone, exposeResult.getMd5());
             System.out.println(seckillResult.getStateInfo());
         }
     }

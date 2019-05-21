@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @Description 秒杀商品（库存）表
+ * @Description 秒杀商品（库存）
  * @Author yuzhou
  * @Date 19-5-17
  */

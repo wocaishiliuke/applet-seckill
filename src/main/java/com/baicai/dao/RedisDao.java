@@ -59,8 +59,7 @@ public class RedisDao {
         try (Jedis jedis = jedisPool.getResource()) {
             String key = PREFIX + skProduct.getId();
             byte[] bytes = ProtobufIOUtil.toByteArray(skProduct, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-            // 超时时间
-
+            // 设置超时时间
             return jedis.setex(key.getBytes(), TIMEOUT, bytes);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

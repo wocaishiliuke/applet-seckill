@@ -20,7 +20,7 @@ public interface SkProductMapper {
     * @param id 秒杀商品ID
     * @return 商品信息
     */
-   SkProduct queryById(@Param("id") long id);
+   SkProduct queryById(@Param("id") Long id);
 
    /**
     * 查询秒杀商品分页列表
@@ -29,7 +29,7 @@ public interface SkProductMapper {
     * @param limit 条数
     * @return 分页商品列表
     */
-   List<SkProduct> queryPageList(@Param("offset") int offset, @Param("limit") int limit);
+   List<SkProduct> queryPageList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 
    /**
     * 根据秒杀商品ID，减库存
@@ -38,7 +38,7 @@ public interface SkProductMapper {
     * @param killTime 秒杀时间
     * @return 秒杀成功返回1，否则就返回0
     */
-   int reduceNumber(@Param("id") long id, @Param("killTime") LocalDateTime killTime);
+   Integer reduceNumber(@Param("id") Long id, @Param("killTime") LocalDateTime killTime);
 
    /**
     * 使用储存过程执行秒杀

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -18,16 +20,16 @@ public class SkRecordMapperTest {
 
     @Test
     public void queryBySkproductIdAndUserPhone() {
-        long id = 1000L;
-        long userPhone = 13476191877L;
+        Long id = 1000L;
+        Long userPhone = 13888888888L;
         SkRecord skRecord = skRecordMapper.queryBySkproductIdAndUserPhone(id, userPhone);
         System.out.println(skRecord);
     }
 
     @Test
     public void insert() {
-        long id=1000;
-        long userPhone=13476191877L;
-        System.out.println(skRecordMapper.insert(id,userPhone));
+        Long id = 1000L;
+        Long userPhone = 13888888888L;
+        System.out.println(skRecordMapper.insert(id,userPhone, LocalDateTime.now()));
     }
 }
