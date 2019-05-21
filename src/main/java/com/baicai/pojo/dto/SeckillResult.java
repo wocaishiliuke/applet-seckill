@@ -11,16 +11,16 @@ import com.baicai.pojo.SkRecord;
 public class SeckillResult {
 
     /* 秒杀商品ID */
-    private long seckillId;
+    private Long seckillId;
     /* 秒杀结果的状态 */
-    private int state;
+    private Integer state;
     /* 状态结果的说明 */
     private String stateInfo;
     /* 秒杀成功时的秒杀记录 */
     private SkRecord skRecord;
 
     /* 秒杀成功时，调用的构造 */
-    public SeckillResult(long seckillId, SeckillStatusEnum statusEnum, SkRecord skRecord) {
+    public SeckillResult(Long seckillId, SeckillStatusEnum statusEnum, SkRecord skRecord) {
         this.seckillId = seckillId;
         this.state = statusEnum.getStatus();
         this.stateInfo = statusEnum.getInfo();
@@ -28,25 +28,25 @@ public class SeckillResult {
     }
 
     /* 秒杀失败时，调用的构造 */
-    public SeckillResult(long seckillId, SeckillStatusEnum statusEnum) {
+    public SeckillResult(Long seckillId, SeckillStatusEnum statusEnum) {
         this.seckillId = seckillId;
         this.state = statusEnum.getStatus();
         this.stateInfo = statusEnum.getInfo();
     }
 
-    public long getSeckillId() {
+    public Long getSeckillId() {
         return seckillId;
     }
 
-    public void setSeckillId(long seckillId) {
+    public void setSeckillId(Long seckillId) {
         this.seckillId = seckillId;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 

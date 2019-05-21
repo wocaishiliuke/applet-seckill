@@ -17,7 +17,7 @@
 
     <!-- 插入秒杀记录（IGNORE：唯一字段值已存在时，忽略错误，影响条数返回0，但主键仍会自增） -->
     <insert id="insert">
-        INSERT IGNORE INTO sk_record (skproduct_id, user_phone, state)
-        VALUES (#{skproductId}, #{userPhone}, 0)
+        INSERT IGNORE INTO sk_record (skproduct_id, user_phone, state, create_time)
+        VALUES (#{skproductId}, #{userPhone}, 0, #{createTime})
     </insert>
 </mapper>

@@ -61,4 +61,20 @@ public class SkProductServiceImplTest {
             System.out.println("秒杀未开启");
         }
     }
+    
+    /**
+     * 测试使用存储过程的秒杀
+     * @return void
+     */
+    @Test
+    public void executeSeckillProcedureTest() {
+        long id = 1001;
+        long phone = 13688888888L;
+        ExposeResult exposeResult = skProductService.expose(id);
+        if (exposeResult.isExposed()) {
+            String md5 = exposeResult.getMd5();
+            SeckillResult seckillResult = skProductService.seckillByProcedure(id, phone, md5);
+            System.out.println(seckillResult.getStateInfo());
+        }
+    }
 }

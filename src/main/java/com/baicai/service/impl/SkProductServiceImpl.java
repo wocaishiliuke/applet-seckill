@@ -2,13 +2,12 @@ package com.baicai.service.impl;
 
 import com.baicai.dao.RedisDao;
 import com.baicai.enums.SeckillStatusEnum;
-import com.baicai.exception.SeckillClosedException;
-import com.baicai.exception.SeckillException;
-import com.baicai.exception.SeckillRepeatedException;
+import com.baicai.exception.*;
 import com.baicai.mapper.SkProductMapper;
 import com.baicai.mapper.SkRecordMapper;
 import com.baicai.pojo.SkProduct;
 import com.baicai.pojo.SkRecord;
+import com.baicai.pojo.dto.CommonResult;
 import com.baicai.pojo.dto.ExposeResult;
 import com.baicai.pojo.dto.SeckillResult;
 import com.baicai.service.SkProductService;
@@ -51,7 +50,7 @@ public class SkProductServiceImpl implements SkProductService {
      * @return 秒杀商品
      */
     @Override
-    public SkProduct getById(long id) {
+    public SkProduct getById(Long id) {
         SkProduct skProduct = redisDao.getSkProduct(id);
         if (skProduct == null) {
             skProduct = skProductMapper.queryById(id);
@@ -70,7 +69,7 @@ public class SkProductServiceImpl implements SkProductService {
      * @return 分页商品列表
      */
     @Override
-    public List<SkProduct> getPageList(int offset, int limit) {
+    public List<SkProduct> getPageList(Integer offset, Integer limit) {
         return skProductMapper.queryPageList(offset, limit);
     }
 
@@ -81,7 +80,7 @@ public class SkProductServiceImpl implements SkProductService {
      * @return 秒杀接口地址 或 系统时间和秒杀地址
      */
     @Override
-    public ExposeResult expose(long id) {
+    public ExposeResult expose(Long id) {
         // 判断是否存在该秒杀商品
         /*SkProduct skProduct = skProductMapper.queryById(id);
         if (skProduct == null) {
@@ -115,6 +114,7 @@ public class SkProductServiceImpl implements SkProductService {
 
     /**
      * 执行秒杀操作
+     * 这里的自定义业务异常，都可以使用return代替，只是为了使用的异常统一处理
      *
      * @param id 秒杀商品ID
      * @param userPhone 用户手机号
@@ -123,10 +123,15 @@ public class SkProductServiceImpl implements SkProductService {
      */
     @Override
     @Transactional
-    public SeckillResult seckill(long id, long userPhone, String md5) throws SeckillException {
+    public SeckillResult seckill(Long id, Long userPhone, String md5) {
+
+        if(userPhone == null) {
+            logger.error("请求缺少手机号");
+            throw new SeckillNoPhoneException("seckill data without phone...");
+        }
         if (md5 == null || !md5.equals(getSaltedMd5(id))) {
-            logger.error("秒杀数据被篡改");
-            throw new SeckillException("seckill data rewrite...");
+            logger.error("id的md5不匹配，说明数据被篡改");
+            throw new SeckillRewriteException("seckill data is rewrited...");
         }
 
         // 执行秒杀
@@ -139,9 +144,10 @@ public class SkProductServiceImpl implements SkProductService {
                 throw new SeckillClosedException("seckill is closed...");
             } else {
                 // 减库存成功，新增秒杀记录
-                int insertCount = skRecordMapper.insert(id, userPhone);
+                Integer insertCount = skRecordMapper.insert(id, userPhone, nowTime);
                 // 判断是否重复秒杀
                 if (insertCount <= 0) {
+                    logger.warn("新增秒杀记录失败, 说明重复秒杀");
                     throw new SeckillRepeatedException("seckill repeated...");
                 } else {
                     // 秒杀成功（减库存成功&&不是重复秒杀）
@@ -154,14 +160,20 @@ public class SkProductServiceImpl implements SkProductService {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             // 其他异常转换为自定义异常
-            throw new SeckillException("seckill inner error : " + e.getMessage());
+            throw new SeckillException("seckill inner error: " + e.getMessage());
         }
     }
 
     @Override
-    public SeckillResult seckillByProcedure(Long id, long userPhone, String md5) {
+    @Transactional
+    public SeckillResult seckillByProcedure(Long id, Long userPhone, String md5) {
+        if(userPhone == null) {
+            logger.error("请求缺少手机号");
+            throw new SeckillNoPhoneException("seckill data without phone...");
+        }
         if (md5 == null || !md5.equals(getSaltedMd5(id))) {
-            return new SeckillResult(id, SeckillStatusEnum.DATE_REWRITE);
+            logger.error("id的md5不匹配，说明数据被篡改");
+            throw new SeckillRewriteException("seckill data is rewrited...");
         }
 
         LocalDateTime killTime = LocalDateTime.now();
@@ -173,21 +185,35 @@ public class SkProductServiceImpl implements SkProductService {
         try {
             // 执行储存过程
             skProductMapper.seckillByProcedure(map);
-            // 获取result
+            // 获取result（获取不到时，默认-2，表示sql错误INNER_ERROR）
             int result = MapUtils.getInteger(map, "result", -2);
-            if (result == 1) {
+            // 根据存储过程的返回值，抛异常或返回
+            if (result == SeckillStatusEnum.SUCCESS.getStatus()) {
                 SkRecord skRecord = skRecordMapper.queryBySkproductIdAndUserPhone(id, userPhone);
                 return new SeckillResult(id, SeckillStatusEnum.SUCCESS, skRecord);
+            } else if (result == SeckillStatusEnum.CLOSED.getStatus()) {
+                logger.warn("减库存失败, 说明秒杀结束");
+                throw new SeckillClosedException("seckill is closed...");
+            } else if (result == SeckillStatusEnum.REPEAT_KILL.getStatus()) {
+                logger.warn("新增秒杀记录失败, 说明重复秒杀");
+                throw new SeckillRepeatedException("seckill repeated...");
             } else {
-                return new SeckillResult(id, SeckillStatusEnum.INNER_ERROR);
+                logger.warn("内部错误");
+                throw new SeckillException("seckill inner error...");
             }
+
+        } catch (SeckillClosedException | SeckillRepeatedException e1) {
+            throw e1;
+        } catch (SeckillException e2) {
+            throw e2;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new SeckillResult(id, SeckillStatusEnum.INNER_ERROR);
+            // 其他异常转换为自定义异常
+            throw new SeckillException("seckill inner error: " + e.getMessage());
         }
     }
 
-    private String getSaltedMd5(long seckillId) {
+    private String getSaltedMd5(Long seckillId) {
         String base = seckillId + "/" + SECKILL_SALT;
         return DigestUtils.md5DigestAsHex(base.getBytes());
     }

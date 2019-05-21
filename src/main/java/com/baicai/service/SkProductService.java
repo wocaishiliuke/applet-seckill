@@ -1,8 +1,6 @@
 package com.baicai.service;
 
-import com.baicai.exception.SeckillClosedException;
 import com.baicai.exception.SeckillException;
-import com.baicai.exception.SeckillRepeatedException;
 import com.baicai.pojo.SkProduct;
 import com.baicai.pojo.dto.ExposeResult;
 import com.baicai.pojo.dto.SeckillResult;
@@ -22,7 +20,7 @@ public interface SkProductService {
      * @param id 秒杀商品ID
      * @return 秒杀商品
      */
-    SkProduct getById(long id);
+    SkProduct getById(Long id);
 
     /**
      * 查询秒杀商品分页列表
@@ -31,7 +29,7 @@ public interface SkProductService {
      * @param limit 条数
      * @return 分页商品列表
      */
-    List<SkProduct> getPageList(int offset, int limit);
+    List<SkProduct> getPageList(Integer offset, Integer limit);
 
     /**
      * 在秒杀开启时，提供秒杀接口的地址，否则输出系统时间和秒杀地址
@@ -39,7 +37,7 @@ public interface SkProductService {
      * @param id 秒杀商品ID
      * @return 秒杀接口地址 或 系统时间和秒杀地址
      */
-    ExposeResult expose(long id);
+    ExposeResult expose(Long id);
 
     /**
      * 执行秒杀操作
@@ -49,7 +47,7 @@ public interface SkProductService {
      * @param md5 md5加密值
      * @return 秒杀结果
      */
-    SeckillResult seckill(long id, long userPhone, String md5)throws SeckillException, SeckillRepeatedException, SeckillClosedException;
+    SeckillResult seckill(Long id, Long userPhone, String md5);
 
     /**
      * 使用储存过程执行秒杀
@@ -58,5 +56,5 @@ public interface SkProductService {
      * @param md5
      * @return
      */
-    SeckillResult seckillByProcedure(Long id, long userPhone, String md5);
+    SeckillResult seckillByProcedure(Long id, Long userPhone, String md5);
 }

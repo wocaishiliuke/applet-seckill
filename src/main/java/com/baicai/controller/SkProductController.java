@@ -2,7 +2,9 @@ package com.baicai.controller;
 
 import com.baicai.enums.SeckillStatusEnum;
 import com.baicai.exception.SeckillClosedException;
+import com.baicai.exception.SeckillNoPhoneException;
 import com.baicai.exception.SeckillRepeatedException;
+import com.baicai.exception.SeckillRewriteException;
 import com.baicai.pojo.SkProduct;
 import com.baicai.pojo.dto.CommonResult;
 import com.baicai.pojo.dto.ExposeResult;
@@ -33,7 +35,7 @@ public class SkProductController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "list", method = RequestMethod.GET)
+    @GetMapping("list")
     public String list(Model model) {
         // TODO 分页：offset为页码，limit为每页条数，应有页面传来
         List<SkProduct> skProductList = skProductService.getPageList(0, 4);
@@ -49,13 +51,13 @@ public class SkProductController {
      */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public String detail(@PathVariable("id") Long id, Model model) {
-        if (id == null) {
+        if (id == null)
             return "redirect:/skProduct/list";
-        }
+
         SkProduct skProduct = skProductService.getById(id);
-        if (skProduct == null) {
+        if (skProduct == null)
             return "forward:/skProduct/list";
-        }
+
         model.addAttribute("skProduct", skProduct);
         return "detail";
     }
@@ -81,6 +83,8 @@ public class SkProductController {
     
     /**
      * 秒杀
+     * TODO 异常统一处理（注意处理后的返回数据需要参数id）
+     *
      * @param id
      * @param md5
      * @param userPhone 前端保存在Cookie
@@ -90,24 +94,23 @@ public class SkProductController {
     @RequestMapping(value = "seckill/{id}/{md5}", method = RequestMethod.POST)
     public CommonResult<SeckillResult> seckill(@PathVariable("id") Long id, @PathVariable("md5") String md5,
                                                @CookieValue(value = "userPhone", required = false) Long userPhone) {
-        if(userPhone == null) {
-            return new CommonResult<>(false, "没有手机号");
-        }
-        // 根据用户的手机号码,秒杀商品的id跟md5进行秒杀商品,没异常就是秒杀成功
         try {
             // 这里换成储存过程
             //SeckillResult seckillResult = skProductService.seckill(id, userPhone, md5);
             SeckillResult seckillResult = skProductService.seckillByProcedure(id, userPhone, md5);
             return new CommonResult<>(true, seckillResult);
-        } catch (SeckillRepeatedException e1) {
+        } catch (SeckillNoPhoneException e1) {
+            // 缺少手机号
+            return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.NO_PHONE));
+        } catch (SeckillRewriteException e2) {
+            // 秒杀被篡改
+            return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.DATE_REWRITE));
+        } catch (SeckillClosedException e3) {
+            // 秒杀关闭
+            return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.CLOSED));
+        } catch (SeckillRepeatedException e4) {
             // 重复秒杀
             return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.REPEAT_KILL));
-        } catch (SeckillClosedException e2) {
-            // 秒杀关闭
-            return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.END));
-        } catch (Exception e) {
-            // 不能判断的异常，包括SeckillException
-            return new CommonResult<>(false, new SeckillResult(id, SeckillStatusEnum.INNER_ERROR));
         }
     }
 
