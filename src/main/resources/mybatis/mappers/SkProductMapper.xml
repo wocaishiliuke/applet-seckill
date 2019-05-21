@@ -20,4 +20,14 @@
               AND number > 0
     </update>
 
+    <!-- 调用储存过程 -->
+    <select id="seckillByProcedure" statementType="CALLABLE">
+        CALL execute_seckill(
+            #{id,jdbcType=BIGINT,mode=IN},
+            #{phone,jdbcType=BIGINT,mode=IN},
+            #{killTime,jdbcType=TIMESTAMP,mode=IN},
+            #{result,jdbcType=INTEGER,mode=OUT}
+        )
+    </select>
+
 </mapper>

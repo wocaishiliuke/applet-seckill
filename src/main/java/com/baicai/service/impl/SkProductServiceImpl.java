@@ -12,6 +12,7 @@ import com.baicai.pojo.SkRecord;
 import com.baicai.pojo.dto.ExposeResult;
 import com.baicai.pojo.dto.SeckillResult;
 import com.baicai.service.SkProductService;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 秒杀商品（库存）业务实现
@@ -152,6 +155,35 @@ public class SkProductServiceImpl implements SkProductService {
             logger.error(e.getMessage(), e);
             // 其他异常转换为自定义异常
             throw new SeckillException("seckill inner error : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public SeckillResult seckillByProcedure(Long id, long userPhone, String md5) {
+        if (md5 == null || !md5.equals(getSaltedMd5(id))) {
+            return new SeckillResult(id, SeckillStatusEnum.DATE_REWRITE);
+        }
+
+        LocalDateTime killTime = LocalDateTime.now();
+        Map<String, Object> map = new HashMap<>(8);
+        map.put("id", id);
+        map.put("phone", userPhone);
+        map.put("killTime", killTime);
+        map.put("result", null);
+        try {
+            // 执行储存过程
+            skProductMapper.seckillByProcedure(map);
+            // 获取result
+            int result = MapUtils.getInteger(map, "result", -2);
+            if (result == 1) {
+                SkRecord skRecord = skRecordMapper.queryBySkproductIdAndUserPhone(id, userPhone);
+                return new SeckillResult(id, SeckillStatusEnum.SUCCESS, skRecord);
+            } else {
+                return new SeckillResult(id, SeckillStatusEnum.INNER_ERROR);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new SeckillResult(id, SeckillStatusEnum.INNER_ERROR);
         }
     }
 

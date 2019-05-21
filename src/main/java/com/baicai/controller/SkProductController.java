@@ -35,6 +35,7 @@ public class SkProductController {
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(Model model) {
+        // TODO 分页：offset为页码，limit为每页条数，应有页面传来
         List<SkProduct> skProductList = skProductService.getPageList(0, 4);
         model.addAttribute("list", skProductList);
         return "list";
@@ -95,7 +96,8 @@ public class SkProductController {
         // 根据用户的手机号码,秒杀商品的id跟md5进行秒杀商品,没异常就是秒杀成功
         try {
             // 这里换成储存过程
-            SeckillResult seckillResult = skProductService.seckill(id, userPhone, md5);
+            //SeckillResult seckillResult = skProductService.seckill(id, userPhone, md5);
+            SeckillResult seckillResult = skProductService.seckillByProcedure(id, userPhone, md5);
             return new CommonResult<>(true, seckillResult);
         } catch (SeckillRepeatedException e1) {
             // 重复秒杀

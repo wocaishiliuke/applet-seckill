@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 秒杀商品Mapper（映射器）
@@ -38,4 +39,10 @@ public interface SkProductMapper {
     * @return 秒杀成功返回1，否则就返回0
     */
    int reduceNumber(@Param("id") long id, @Param("killTime") LocalDateTime killTime);
+
+   /**
+    * 使用储存过程执行秒杀
+    * @param param
+    */
+   void seckillByProcedure(Map<String,Object> param);
 }

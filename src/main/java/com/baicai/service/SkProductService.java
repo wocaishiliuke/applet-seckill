@@ -50,4 +50,13 @@ public interface SkProductService {
      * @return 秒杀结果
      */
     SeckillResult seckill(long id, long userPhone, String md5)throws SeckillException, SeckillRepeatedException, SeckillClosedException;
+
+    /**
+     * 使用储存过程执行秒杀
+     * @param id
+     * @param userPhone
+     * @param md5
+     * @return
+     */
+    SeckillResult seckillByProcedure(Long id, long userPhone, String md5);
 }
