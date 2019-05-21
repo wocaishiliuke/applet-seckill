@@ -1384,3 +1384,19 @@ public CommonResult<SeckillResult> seckill(@PathVariable("id") Long id, @PathVar
 ```
 
 
+---
+## 四、页面测试
+
+- 1.在IDEA中启动项目，或在终端执行：
+
+```shell
+mvn tomcat7:run
+```
+
+- 2.访问列表页
+
+```
+http://localhost:9999/skProduct/list
+```
+
+- 3.修改数据库时间，完成各项测试（注意MySQL中修改，Redis中没有做同步）
