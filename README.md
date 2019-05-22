@@ -73,7 +73,6 @@ create table sk_record(
 
 
 ---
-  
 ## 四、项目编码 
 ### 1.Java高并发秒杀业务分析与DAO层
 
@@ -476,6 +475,7 @@ public class SkRecordMapperTest {
 ```
 
 
+---
 ### 2.Java高并发秒杀Service层
 
 #### 2.1 类文件
@@ -812,6 +812,7 @@ public class SkProductServiceImplTest {
 }
 ```
 
+---
 ### 3.Java高并发秒杀Web层
 
 #### 3.1 引入依赖
@@ -1046,6 +1047,7 @@ applet-seckill/src/main/webapp$ tree
     └── web.xml
 ```
 
+---
 ### 4.Java高并发秒杀优化
 
 #### 4.1 Redis
@@ -1228,6 +1230,8 @@ BEGIN
 END
 ```
 
+> 该存储过程完成了"减库存+查记录"（两条SQL合并）。
+
 - 2.Workbench中测试
 
 在查询窗口执行下列SQL。
@@ -1240,13 +1244,13 @@ CALL execute_seckill(1003, 13888888888, now(), @r_result);
 SELECT @r_result;
 ```
 
-##### 4.2.2 在Java层创建存储过程
+##### 4.2.2 在Java层调用存储过程
 
 在数据库中完成存储过程测试后，编写对应的调用代码。
 
 - 1.在DAO层，定义调用存储过程的Java方法
 
-在SkProductMapper接口中增加，使用存储过程完成"减库存+查记录"的方法。
+在SkProductMapper接口中增加：
 
 ```java
 public interface SkProductMapper {
@@ -1257,7 +1261,7 @@ public interface SkProductMapper {
 }
 ```
 
-在对应SkProductMapper.xml中，增加statement
+在对应SkProductMapper.xml中，增加对应的statement
 
 ```xml
 <!-- 调用储存过程 -->
@@ -1401,4 +1405,4 @@ mvn tomcat7:run
 http://localhost:9999/skProduct/list
 ```
 
-- 3.修改数据库时间，完成各项测试（注意MySQL中修改，Redis中没有做同步）
+- 3.修改数据库时间，完成各项测试（注意在MySQL中直接修改，Redis中没有做同步）
